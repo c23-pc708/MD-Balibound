@@ -11,8 +11,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
+import com.bangkit.capstone.balibound.ui.theme.FontFamily
 
 @Composable
 fun CustomButton(
@@ -22,7 +25,6 @@ fun CustomButton(
     text: String = "Button",
     modifier: Modifier = Modifier,
     IconButton: Int? = null,
-    textModifier: Modifier = Modifier,
 ) {
     Button(
         onClick = onClick,
@@ -39,7 +41,7 @@ fun CustomButton(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = text, modifier = textModifier)
+            Text(text = text, fontFamily = FontFamily, fontSize = 16.sp, fontWeight = FontWeight.SemiBold)
 
             if (IconButton != null) {
                 Icon(

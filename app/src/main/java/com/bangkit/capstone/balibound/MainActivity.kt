@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -20,7 +21,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.bangkit.capstone.balibound.ui.navigation.Screen
+import com.bangkit.capstone.balibound.ui.screen.Destination.DestinationScreen
 import com.bangkit.capstone.balibound.ui.screen.Home.HomeScreen
+import com.bangkit.capstone.balibound.ui.screen.Home.SavedScreen
 import com.bangkit.capstone.balibound.ui.screen.Login.LoginScreen
 import com.bangkit.capstone.balibound.ui.screen.Profile.ProfileScreen
 import com.bangkit.capstone.balibound.ui.screen.Register.RegisterScreen
@@ -29,6 +32,7 @@ import com.bangkit.capstone.balibound.ui.theme.BaliBoundTheme
 
 class MainActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+    @ExperimentalFoundationApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -56,6 +60,14 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(Screen.ProfileScreen.route) {
                             ProfileScreen(navController = navController)
+                        }
+                        composable(Screen.SavedScreen.route) {
+                            SavedScreen(navController = navController)
+                        }
+                        composable(Screen.DestinationScreen.route + "/{destinationId}") {
+                            DestinationScreen(
+                                navController = navController,
+                            )
                         }
                     }
                 }

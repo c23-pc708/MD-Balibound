@@ -14,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -29,6 +30,7 @@ fun TextInput(
     value: String,
     onValueChange: (String) -> Unit,
     label: String? = null,
+    shape : Shape = RoundedCornerShape(0.dp),
     placeholder: String = "",
     enabled: Boolean = true,
     type: String = "text",
@@ -42,7 +44,7 @@ fun TextInput(
     val isFieldValid = when (type) {
         "email" -> value.isNotEmpty() && value.matches(Regex("[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"))
         "password" -> value.isNotEmpty() && value.length >= 8
-        "text" -> value.isNotEmpty() && value.length >= 3
+        "text" -> value.isNotEmpty() && value.length >= 1
         "number" -> value.isNotEmpty() && value.matches(Regex("[0-9]+"))
         "phone" -> value.isNotEmpty() && value.matches(Regex("[0-9]+")) && value.length >= 10
         else -> true
@@ -88,11 +90,12 @@ fun TextInput(
             enabled = enabled,
             value = value,
             colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = Color.Transparent,
+                backgroundColor = Color.White,
                 cursorColor = Color.Black,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
             ),
+            shape = shape,
             keyboardOptions = when (type) {
                 "email" -> KeyboardOptions(keyboardType = KeyboardType.Email)
                 "password" -> KeyboardOptions(keyboardType = KeyboardType.Password)
