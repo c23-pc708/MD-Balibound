@@ -2,6 +2,9 @@ package com.bangkit.capstone.balibound.ui.screen.Destination
 
 
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -11,6 +14,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -22,40 +27,73 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.bangkit.capstone.balibound.R
 import com.bangkit.capstone.balibound.ui.component.CustomButton
 import com.bangkit.capstone.balibound.ui.theme.Blue500
 import com.bangkit.capstone.balibound.ui.theme.FontFamily
+import com.bangkit.capstone.balibound.utils.Result
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun DestinationScreen(
-    navController: NavController = rememberNavController()
+    navController: NavController = rememberNavController(),
+    destinationViewModel: DestinationViewModel = hiltViewModel(),
+    destinationId: String? = ""
 ) {
+
+    val destinationState = destinationViewModel.destinationState.collectAsState().value
+    val loading = destinationViewModel.loading.collectAsState().value
+    val destination = destinationViewModel.destination.collectAsState().value
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.image_skleton))
+
+    when (destinationState) {
+        is Result.Empty -> {
+            destinationViewModel.getDestination(destinationId)
+        }
+        is Result.Error -> {
+            Toast.makeText(navController.context, "Terjadi kesalahan", Toast.LENGTH_SHORT).show()
+        }
+        else -> {}
+    }
+
     Scaffold(
         bottomBar = {
-            CustomButton(onClick = { /*TODO*/ }, text = "Get Direction", modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 20.dp, end = 20.dp, bottom = 20.dp))
+            CustomButton(
+                onClick = {
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    intent.data = Uri.parse(destination?.locationLink)
+                    navController.context.startActivity(intent)
+                }, text = "Get Direction", modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 20.dp, end = 20.dp, bottom = 20.dp)
+            )
         }
     ) {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             item {
                 Box(modifier = Modifier.fillMaxWidth()) {
-                    Image(
-                        painter = painterResource(id = R.drawable.kuta_full),
-                        contentDescription = "kuta",
+
+                    AsyncImage(
+                        model = destination?.imageLink ?: "",
+                        contentDescription = "image",
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(350.dp),
-                        contentScale = ContentScale.FillBounds
+                        contentScale = ContentScale.Crop
                     )
+
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(start = 20.dp, end = 20.dp, top = 50.dp),
+                            .padding(start = 20.dp, end = 20.dp, top = 40.dp),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Row(
@@ -109,7 +147,10 @@ fun DestinationScreen(
                                     ),
                                 ),
                             ) {
-                                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxHeight()) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.fillMaxHeight()
+                                ) {
                                     Icon(
                                         painter = painterResource(id = R.drawable.baseline_star_24),
                                         contentDescription = "star",
@@ -117,36 +158,16 @@ fun DestinationScreen(
                                         tint = Color("#F5CB00".toColorInt())
                                     )
                                     Spacer(modifier = Modifier.width(4.dp))
-                                    Text(text = "4.5", fontSize = 16.sp, fontFamily = FontFamily, color = Color.White, modifier = Modifier.padding(top=4.dp))
+                                    Text(
+                                        text = "${destination?.rating}",
+                                        fontSize = 16.sp,
+                                        fontFamily = FontFamily,
+                                        color = Color.White,
+                                        modifier = Modifier.padding(top = 4.dp)
+                                    )
                                 }
                             }
 
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Button(
-                                onClick = { /*TODO*/ },
-                                border = null,
-                                modifier = Modifier
-                                    .clip(CircleShape)
-                                    .border(
-                                        width = 1.dp,
-                                        color = Color.Gray.copy(
-                                            alpha = 0.2f
-                                        ),
-                                        shape = CircleShape
-                                    ),
-                                shape = CircleShape,
-                                colors = ButtonDefaults.buttonColors(
-                                    backgroundColor = Color.Gray.copy(
-                                        alpha = 0.2f
-                                    ),
-                                )
-                            ) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.icon_bookmark),
-                                    contentDescription = "bookmark",
-                                    modifier = Modifier.size(24.dp)
-                                )
-                            }
                         }
                     }
 
@@ -180,7 +201,7 @@ fun DestinationScreen(
                                 .padding(horizontal = 20.dp)
                         ) {
                             Text(
-                                text = "Pantai Kuta",
+                                text = "${destination?.name}",
                                 color = Blue500,
                                 fontFamily = FontFamily,
                                 fontWeight = FontWeight.SemiBold,
@@ -194,15 +215,35 @@ fun DestinationScreen(
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
                                 Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Icon(painter = painterResource(id = R.drawable.baseline_location_on_24), contentDescription = "Location", tint = Color("#858D9D".toColorInt()))
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.baseline_location_on_24),
+                                        contentDescription = "Location",
+                                        tint = Color("#858D9D".toColorInt())
+                                    )
                                     Spacer(modifier = Modifier.width(6.dp))
-                                    Text(text = "Kuta", fontFamily = FontFamily, fontSize = 14.sp, color = Color("#858D9D".toColorInt()), modifier = Modifier.padding(top=2.dp))
+                                    Text(
+                                        text = "${destination?.location}",
+                                        fontFamily = FontFamily,
+                                        fontSize = 14.sp,
+                                        color = Color("#858D9D".toColorInt()),
+                                        modifier = Modifier.padding(top = 2.dp)
+                                    )
                                 }
 
                                 Row() {
-                                    Icon(painter = painterResource(id = R.drawable.baseline_access_time_24), contentDescription = "Time", tint = Color("#858D9D".toColorInt()))
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.baseline_access_time_24),
+                                        contentDescription = "Time",
+                                        tint = Color("#858D9D".toColorInt())
+                                    )
                                     Spacer(modifier = Modifier.width(6.dp))
-                                    Text(text = "09:00 - 16:00", fontFamily = FontFamily, fontSize = 14.sp, color = Color("#858D9D".toColorInt()), modifier = Modifier.padding(top=2.dp))
+                                    Text(
+                                        text = "${destination?.weekdaysTime}",
+                                        fontFamily = FontFamily,
+                                        fontSize = 14.sp,
+                                        color = Color("#858D9D".toColorInt()),
+                                        modifier = Modifier.padding(top = 2.dp)
+                                    )
                                 }
                             }
 
@@ -218,7 +259,7 @@ fun DestinationScreen(
                             Spacer(modifier = Modifier.height(16.dp))
 
                             Text(
-                                text = "Pantai Kuta adalah destinasi populer di Bali dengan pasir putih lembut dan ombak yang cocok untuk berselancar. Pantai ini juga terkenal dengan matahari terbenam yang indah dan memiliki suasana hidup dengan beragam kafe dan restoran.",
+                                text = "${destination?.description}",
                                 fontFamily = FontFamily,
                                 fontWeight = FontWeight.Normal,
                                 color = Color("#858D9D".toColorInt()),
@@ -234,8 +275,3 @@ fun DestinationScreen(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun DestinationScreenPreview() {
-    DestinationScreen()
-}

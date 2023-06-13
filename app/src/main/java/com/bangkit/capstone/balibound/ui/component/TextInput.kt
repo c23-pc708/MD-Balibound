@@ -43,7 +43,7 @@ fun TextInput(
 
     val isFieldValid = when (type) {
         "email" -> value.isNotEmpty() && value.matches(Regex("[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"))
-        "password" -> value.isNotEmpty() && value.length >= 8
+        "password" -> value.isNotEmpty() && value.length >= 6
         "text" -> value.isNotEmpty() && value.length >= 1
         "number" -> value.isNotEmpty() && value.matches(Regex("[0-9]+"))
         "phone" -> value.isNotEmpty() && value.matches(Regex("[0-9]+")) && value.length >= 10
@@ -127,7 +127,7 @@ fun TextInput(
                     )
                 }
             },
-            maxLines = 1,
+            singleLine = true,
         )
     }
 

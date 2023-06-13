@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
@@ -19,43 +20,31 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.bangkit.capstone.balibound.R
 import com.bangkit.capstone.balibound.ui.component.BottomNavigationBar
 import com.bangkit.capstone.balibound.ui.component.CustomButton
+import com.bangkit.capstone.balibound.ui.navigation.Screen
 import com.bangkit.capstone.balibound.ui.theme.Blue500
 import com.bangkit.capstone.balibound.ui.theme.FontFamily
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun ProfileScreen(
-    navController: NavController = rememberNavController()
+    navController: NavController = rememberNavController(),
+    profileViewModel: ProfileViewModel = hiltViewModel()
 ) {
+
+    var userData = profileViewModel.userData.collectAsState().value
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         backgroundColor = Color("#FDFDFF".toColorInt()),
         bottomBar = {
             BottomNavigationBar(navController = navController)
         },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-
-                },
-                backgroundColor = Blue500,
-                modifier = Modifier.size(60.dp)
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.icon_bookmark),
-                    contentDescription = "Check",
-                    tint = Color.White,
-                    modifier = Modifier.size(30.dp)
-                )
-            }
-        },
-        floatingActionButtonPosition = FabPosition.Center,
-        isFloatingActionButtonDocked = true
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize()
@@ -90,7 +79,7 @@ fun ProfileScreen(
                         )
 
                         Text(
-                            text = "Raditya Firman Syaputra",
+                            text = "${userData?.firstName} ${userData?.lastName}",
                             fontFamily = FontFamily,
                             fontWeight = FontWeight.SemiBold,
                             fontStyle = FontStyle.Normal,
@@ -102,7 +91,7 @@ fun ProfileScreen(
                         )
 
                         Text(
-                            text = "radit@student.uns.ac.id",
+                            text = "${userData?.username}",
                             fontFamily = FontFamily,
                             fontWeight = FontWeight.Normal,
                             fontStyle = FontStyle.Normal,
@@ -154,7 +143,7 @@ fun ProfileScreen(
 
                         Spacer(modifier = Modifier.height(12.dp))
 
-                        Text(text = "Raditya Firman Syaputra",
+                        Text(text = "${userData?.firstName} ${userData?.lastName}",
                             fontFamily = FontFamily,
                             fontWeight = FontWeight.SemiBold,
                             fontStyle = FontStyle.Normal,
@@ -183,7 +172,7 @@ fun ProfileScreen(
 
                         Spacer(modifier = Modifier.height(12.dp))
 
-                        Text(text = "radit@student.uns.ac.id",
+                        Text(text = "${userData?.email}",
                             fontFamily = FontFamily,
                             fontWeight = FontWeight.SemiBold,
                             fontStyle = FontStyle.Normal,
@@ -229,7 +218,14 @@ fun ProfileScreen(
                 Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp)) {
                     Spacer(modifier = Modifier.height(20.dp))
                     CustomButton(
-                        onClick = { /*TODO*/ },
+                        onClick = {
+                            profileViewModel.logout()
+                            navController.navigate(Screen.LoginScreen.route){
+                                popUpTo(Screen.LoginScreen.route){
+                                    inclusive = true
+                                }
+                            }
+                        },
                         modifier = Modifier.fillMaxWidth().height(44.dp).border(
                             width = 1.dp,
                             color = Color("#F5A4A4".toColorInt()),

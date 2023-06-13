@@ -8,10 +8,6 @@ import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.outlined.DateRange
-import androidx.compose.material.icons.outlined.Person
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,81 +20,114 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
+import coil.compose.AsyncImage
 import com.bangkit.capstone.balibound.R
+import com.bangkit.capstone.balibound.data.model.response.DestinationItemResponse
 import com.bangkit.capstone.balibound.ui.theme.Blue500
 import com.bangkit.capstone.balibound.ui.theme.FontFamily
-
-data class Destination(
-    val id : Int,
-    val image : String,
-    val title: String,
-    val location : String,
-    val time : String,
-    val isSaved : Boolean = false,
-)
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun CardDestination(
-    destination: Destination = Destination(
-        id = 0,
-        image = "",
-        title = "Pura Tanah Lot",
-        location = "Tabanan",
-        time = "08.00 - 17.00",
-    ),
-    onClick : (Int) -> Unit = {},
-    isSavedScreen : Boolean = false,
+    DestinationItemResponse: DestinationItemResponse,
+    onClick: (Int) -> Unit = {},
 ) {
-    Card(modifier = Modifier
-        .fillMaxWidth().border(
-            width = 1.dp,
-            color = Color("#F0F1F3".toColorInt()),
-            shape = RoundedCornerShape(16.dp)
-        ), elevation = 0.dp, onClick = {
-        onClick(destination.id)
-    }, backgroundColor = Color.White, shape = RoundedCornerShape(16.dp),
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(
+                width = 1.dp,
+                color = Color("#F0F1F3".toColorInt()),
+                shape = RoundedCornerShape(16.dp)
+            ),
+        elevation = 0.dp,
+        onClick = {
+            onClick(DestinationItemResponse.id)
+        },
+        backgroundColor = Color.White, shape = RoundedCornerShape(16.dp),
     )
     {
-        Column(modifier = Modifier.fillMaxSize().padding(12.dp)) {
-            Image(painter = painterResource(id = R.drawable.kuta), contentDescription = "Image", modifier = Modifier
-                .height(100.dp)
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(8.dp)),
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(12.dp)
+        ) {
+
+            AsyncImage(
+                model = DestinationItemResponse.imageLink,
+                contentDescription = DestinationItemResponse.name,
+                modifier = Modifier
+                    .height(100.dp)
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(8.dp)),
                 contentScale = ContentScale.Crop,
             )
 
             Spacer(modifier = Modifier.height(12.dp))
-            Text(text = destination.title, maxLines = 1, fontFamily = FontFamily, fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = Color("#000000".toColorInt()))
+            Text(
+                text = DestinationItemResponse.name,
+                maxLines = 1,
+                fontFamily = FontFamily,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = Color("#000000".toColorInt())
+            )
             Spacer(modifier = Modifier.height(4.dp))
-            Text(text = destination.location, maxLines = 1, fontFamily = FontFamily, fontSize = 10.sp, fontWeight = FontWeight.Normal, color = Color("#858D9D".toColorInt()))
+            Text(
+                text = DestinationItemResponse.location,
+                maxLines = 1,
+                fontFamily = FontFamily,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Normal,
+                color = Color("#858D9D".toColorInt())
+            )
             Spacer(modifier = Modifier.height(12.dp))
 
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(painter = painterResource(id = R.drawable.baseline_access_time_24), contentDescription = "Icon", modifier = Modifier.size(16.dp), tint = Blue500)
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(text = destination.time, fontFamily = FontFamily, fontSize = 10.sp, fontWeight = FontWeight.Normal, color = Blue500)
-                }
-
-                if (isSavedScreen) {
-                    Icon(painter = painterResource(id = R.drawable.baseline_delete_24), contentDescription = "Icon", modifier = Modifier.size(24    .dp), tint = Color.Red)
-                } else {
                     Icon(
-                        painter = if(destination.isSaved) painterResource(id = R.drawable.baseline_bookmark_24) else painterResource(id = R.drawable.baseline_bookmark_24),
+                        painter = painterResource(id = R.drawable.baseline_access_time_24),
                         contentDescription = "Icon",
-                        tint = Blue500,
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(16.dp),
+                        tint = Blue500
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = DestinationItemResponse.weekdaysTime,
+                        fontFamily = FontFamily,
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Normal,
+                        color = Blue500,
+                        modifier = Modifier.padding(top = 3.dp)
                     )
                 }
+
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.baseline_star_24),
+                        contentDescription = "Icon",
+                        modifier = Modifier.size(16.dp),
+                        tint = Color("#F5CB00".toColorInt())
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = DestinationItemResponse.rating.toString(),
+                        fontFamily = FontFamily,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Normal,
+                        color = Color("#F5CB00".toColorInt()),
+                        modifier = Modifier.padding(top = 3.dp)
+                    )
+                }
+
+
             }
         }
     }
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun CardDestinationPreview() {
-    CardDestination()
-}
