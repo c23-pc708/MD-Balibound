@@ -1,5 +1,6 @@
 package com.bangkit.capstone.balibound.ui.screen.Home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bangkit.capstone.balibound.data.model.response.DestinationItemResponse
@@ -50,6 +51,8 @@ class HomeViewModel @Inject constructor(
     fun searchDestinations(query : String, category : List<CardCategoryData>){
         viewModelScope.launch {
             loading.value = true
+
+            Log.d("Category", category.toString())
 
             val data = destinationRepository.getListDestinations(
                 category[0].isActive,

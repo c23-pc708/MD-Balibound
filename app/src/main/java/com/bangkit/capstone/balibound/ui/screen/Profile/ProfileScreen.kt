@@ -2,7 +2,6 @@ package com.bangkit.capstone.balibound.ui.screen.Profile
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
@@ -220,6 +218,10 @@ fun ProfileScreen(
                     CustomButton(
                         onClick = {
                             profileViewModel.logout()
+
+                            //reset all navigation stack
+                            navController.popBackStack(navController.graph.startDestinationRoute!!, inclusive = true)
+
                             navController.navigate(Screen.LoginScreen.route){
                                 popUpTo(Screen.LoginScreen.route){
                                     inclusive = true

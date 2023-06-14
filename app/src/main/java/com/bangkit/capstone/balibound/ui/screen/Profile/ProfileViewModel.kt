@@ -2,7 +2,6 @@ package com.bangkit.capstone.balibound.ui.screen.Profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bangkit.capstone.balibound.data.model.response.DestinationItemResponse
 import com.bangkit.capstone.balibound.data.model.response.LoginResponse
 import com.bangkit.capstone.balibound.data.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel

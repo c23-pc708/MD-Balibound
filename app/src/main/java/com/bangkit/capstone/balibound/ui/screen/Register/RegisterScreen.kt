@@ -259,7 +259,7 @@ fun RegisterScreen(
                         textAlign = TextAlign.Center,
                         modifier = Modifier
                             .clickable {
-                                navController?.navigate(Screen.LoginScreen.route) {
+                                navController.navigate(Screen.LoginScreen.route) {
                                     popUpTo(Screen.RegisterScreen.route) {
                                         inclusive = true
                                     }

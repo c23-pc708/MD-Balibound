@@ -15,7 +15,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,7 +22,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
@@ -31,10 +29,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
-import com.airbnb.lottie.compose.LottieAnimation
-import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.airbnb.lottie.compose.LottieConstants
-import com.airbnb.lottie.compose.rememberLottieComposition
 import com.bangkit.capstone.balibound.R
 import com.bangkit.capstone.balibound.ui.component.CustomButton
 import com.bangkit.capstone.balibound.ui.theme.Blue500
@@ -50,9 +44,7 @@ fun DestinationScreen(
 ) {
 
     val destinationState = destinationViewModel.destinationState.collectAsState().value
-    val loading = destinationViewModel.loading.collectAsState().value
     val destination = destinationViewModel.destination.collectAsState().value
-    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.image_skleton))
 
     when (destinationState) {
         is Result.Empty -> {

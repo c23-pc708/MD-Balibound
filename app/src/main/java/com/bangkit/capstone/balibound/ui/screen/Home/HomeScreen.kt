@@ -1,15 +1,12 @@
 package com.bangkit.capstone.balibound.ui.screen.Home
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -24,7 +21,6 @@ import androidx.navigation.NavController
 import com.bangkit.capstone.balibound.R
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
@@ -34,8 +30,6 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.bangkit.capstone.balibound.ui.component.*
 import com.bangkit.capstone.balibound.ui.navigation.Screen
-import com.bangkit.capstone.balibound.ui.theme.Blue500
-import com.bangkit.capstone.balibound.ui.theme.Blue700
 import com.bangkit.capstone.balibound.ui.theme.FontFamily
 import com.bangkit.capstone.balibound.utils.ext.gridItems
 
@@ -76,7 +70,7 @@ fun HomeScreen(
             ) else cardCategoryData
         }
 
-        homeViewModel.searchDestinations(search, category)
+        homeViewModel.searchDestinations(search, newCategory)
         setCategory(newCategory)
     }
 

@@ -42,3 +42,5 @@ fun <T> LazyListScope.gridItems(
         }
     }
 }
+
+fun Boolean.toInt() = if (this) 1 else 0

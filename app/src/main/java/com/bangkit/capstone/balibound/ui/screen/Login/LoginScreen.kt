@@ -50,10 +50,10 @@ fun LoginScreen(
 
     when(loadingState){
         is Result.Error -> {
-            Toast.makeText(navController?.context, "Email / Password yang anda masukan salah", Toast.LENGTH_SHORT).show()
+            Toast.makeText(navController.context, "Email / Password yang anda masukan salah", Toast.LENGTH_SHORT).show()
         }
         is Result.Success -> {
-            if (navController?.currentDestination?.route == Screen.LoginScreen.route) {
+            if (navController.currentDestination?.route == Screen.LoginScreen.route) {
                 navController.navigate(Screen.HomeScreen.route){
                     popUpTo(Screen.LoginScreen.route){
                         inclusive = true
@@ -126,17 +126,17 @@ fun LoginScreen(
         CustomButton(
             onClick = {
                 if(loading){
-                    Toast.makeText(navController?.context, "Mohon tunggu sebentar", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(navController.context, "Mohon tunggu sebentar", Toast.LENGTH_SHORT).show()
                     return@CustomButton
                 }
 
                 if(username.isEmpty() || password.isEmpty()){
-                    Toast.makeText(navController?.context, "Username dan password tidak boleh kosong", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(navController.context, "Username dan password tidak boleh kosong", Toast.LENGTH_SHORT).show()
                     return@CustomButton
                 }
 
                 if(!isUsernameValid || !isPasswordValid){
-                    Toast.makeText(navController?.context, "Username dan password tidak valid", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(navController.context, "Username dan password tidak valid", Toast.LENGTH_SHORT).show()
                     return@CustomButton
                 }
 
@@ -170,7 +170,7 @@ fun LoginScreen(
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .clickable {
-                        navController?.navigate(Screen.RegisterScreen.route){
+                        navController.navigate(Screen.RegisterScreen.route){
                             popUpTo(Screen.LoginScreen.route){
                                 inclusive = true
                             }

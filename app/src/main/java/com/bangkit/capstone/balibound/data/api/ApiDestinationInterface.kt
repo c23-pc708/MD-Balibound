@@ -10,11 +10,11 @@ import retrofit2.http.Query
 interface ApiDestinationInterface {
     @GET("api/destinations")
     suspend fun getDestination(
-        @Query("art") art: Boolean? = true,
-        @Query("entertainment") entertainment: Boolean? = true,
-        @Query("sightings") sightings: Boolean? = true,
-        @Query("culinary") culinary: Boolean? = true,
-        @Query("shopping") shopping: Boolean? = true,
+        @Query("art") art: Int,
+        @Query("entertainment") entertainment: Int,
+        @Query("sightings") sightings: Int,
+        @Query("culinary") culinary: Int,
+        @Query("shopping") shopping: Int,
         @Query("q") q: String? = ""
     ): ArrayList<DestinationItemResponse>
 
