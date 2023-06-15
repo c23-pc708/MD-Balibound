@@ -42,6 +42,26 @@ class AuthRepository @Inject constructor(
         }
     }
 
+    suspend fun getUser(
+        token: String
+    ): Result<LoginResponse> {
+        return try {
+            var user = apiService.getUser(
+                "Bearer $token"
+            )
+
+            val userDataOld = getUserData()
+            if (userDataOld != null) {
+                user.tokens = userDataOld.tokens
+            }
+
+            saveUserData(user)
+            Result.Success(user)
+        } catch (e: Exception) {
+            Result.Error(e.message.toString())
+        }
+    }
+
     suspend fun getUserData(): LoginResponse? {
         return dataStore.data.map {
             Gson().fromJson(it[userData], LoginResponse::class.java)

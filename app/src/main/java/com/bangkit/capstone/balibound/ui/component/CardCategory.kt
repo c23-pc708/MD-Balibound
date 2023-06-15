@@ -37,7 +37,7 @@ val itemsCardCategoryData = listOf(
         label = "Art",
         value = "art",
         Icon = R.drawable.photo_star,
-        isActive = true
+        isActive = false
     ),
     CardCategoryData(
         id = 1,

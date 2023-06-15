@@ -1,9 +1,9 @@
 package com.bangkit.capstone.balibound.ui.screen.Destination
 
-
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -15,6 +15,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,6 +36,8 @@ import com.bangkit.capstone.balibound.ui.component.CustomButton
 import com.bangkit.capstone.balibound.ui.theme.Blue500
 import com.bangkit.capstone.balibound.ui.theme.FontFamily
 import com.bangkit.capstone.balibound.utils.Result
+import com.gowtham.ratingbar.RatingBar
+import com.gowtham.ratingbar.RatingBarStyle
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -45,6 +49,15 @@ fun DestinationScreen(
 
     val destinationState = destinationViewModel.destinationState.collectAsState().value
     val destination = destinationViewModel.destination.collectAsState().value
+    val ratingDestination = destinationViewModel.ratingDestination.collectAsState().value
+
+    val (isRating, setIsRating) = remember {
+        mutableStateOf(false)
+    }
+
+    val (rating, setRating) = remember {
+        mutableStateOf(0f)
+    }
 
     when (destinationState) {
         is Result.Empty -> {
@@ -53,7 +66,12 @@ fun DestinationScreen(
         is Result.Error -> {
             Toast.makeText(navController.context, "Terjadi kesalahan", Toast.LENGTH_SHORT).show()
         }
-        else -> {}
+        else -> {
+            if(!isRating && rating != ratingDestination.toFloat()){
+                setRating(ratingDestination.toFloat())
+                setIsRating(true)
+            }
+        }
     }
 
     Scaffold(
@@ -257,6 +275,35 @@ fun DestinationScreen(
                                 color = Color("#858D9D".toColorInt()),
                                 fontSize = 14.sp
                             )
+
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 20.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    text = "Rate this place",
+                                    fontFamily = FontFamily,
+                                    fontSize = 16.sp,
+                                    color = Color("#858D9D".toColorInt()),
+                                    modifier = Modifier.padding(bottom = 10.dp),
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                                RatingBar(
+                                    value = rating,
+                                    style = RatingBarStyle.Stroke(),
+                                    onValueChange = {
+                                        setRating(it)
+                                    },
+                                    onRatingChanged = {
+                                        destinationViewModel.postReviewDestination(
+                                            destination?.id ?: 0,
+                                            it.toInt()
+                                        )
+                                    }
+                                )
+                            }
 
                         }
                     }

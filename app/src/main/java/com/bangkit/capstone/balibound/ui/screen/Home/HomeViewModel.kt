@@ -1,8 +1,8 @@
 package com.bangkit.capstone.balibound.ui.screen.Home
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bangkit.capstone.balibound.data.model.request.PredictRequest
 import com.bangkit.capstone.balibound.data.model.response.DestinationItemResponse
 import com.bangkit.capstone.balibound.data.model.response.LoginResponse
 import com.bangkit.capstone.balibound.data.repository.AuthRepository
@@ -35,24 +35,41 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun getDestinations() {
+    fun getDestinations() {
         viewModelScope.launch {
             loading.value = true
-            val data = destinationRepository.getListDestinations()
+            val userData = authRepository.getUserData()
+            val ratingsData = userData?.ratings ?: listOf()
 
-            if (data is Result.Success) {
-                destinations.value = data.data
+            if (ratingsData.any { it != 0 }) {
+                val data = destinationRepository.getRecommendation(
+                    userData?.tokens?.access ?: "",
+                    PredictRequest(ratings = ratingsData)
+                )
+                if (data is Result.Success) {
+                    destinations.value = data.data
+                }
+
+            } else {
+                val data = destinationRepository.getListDestinations()
+                if (data is Result.Success) {
+                    destinations.value = data.data
+                }
+
             }
 
             loading.value = false
         }
     }
 
-    fun searchDestinations(query : String, category : List<CardCategoryData>){
+    fun searchDestinations(query: String, category: List<CardCategoryData>) {
         viewModelScope.launch {
             loading.value = true
 
-            Log.d("Category", category.toString())
+            if(query.isEmpty() && category.all { !it.isActive }) {
+                getDestinations()
+                return@launch
+            }
 
             val data = destinationRepository.getListDestinations(
                 category[0].isActive,

@@ -1,6 +1,7 @@
 package com.bangkit.capstone.balibound.ui.screen.Home
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -32,19 +33,22 @@ import com.bangkit.capstone.balibound.ui.component.*
 import com.bangkit.capstone.balibound.ui.navigation.Screen
 import com.bangkit.capstone.balibound.ui.theme.FontFamily
 import com.bangkit.capstone.balibound.utils.ext.gridItems
-
+import com.bangkit.capstone.balibound.utils.Result
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @ExperimentalFoundationApi
 @Composable
 fun HomeScreen(
     navController: NavController = rememberNavController(),
-    homeViewModel: HomeViewModel = hiltViewModel()
+    homeViewModel: HomeViewModel = hiltViewModel(),
 ) {
 
     var loading = homeViewModel.loading.collectAsState().value
     var userData = homeViewModel.userData.collectAsState().value
     var destinations = homeViewModel.destinations.collectAsState().value
+
+    val ratingsData = userData?.ratings ?: listOf()
+
 
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.card_skleton))
     val items = (0..3).toList()
@@ -58,7 +62,7 @@ fun HomeScreen(
             itemsCardCategoryData
         )
     }
-    
+
     search.useDebounce(1000) {
         homeViewModel.searchDestinations(it, category)
     }
@@ -185,6 +189,24 @@ fun HomeScreen(
                 }
             }
 
+            if (ratingsData.any { it != 0 }) {
+                item {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 20.dp, end = 20.dp, top = 20.dp)
+                    ) {
+                        Text(
+                            text = "Recommended for you",
+                            fontFamily = FontFamily,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color("#1E2432".toColorInt())
+                        )
+                    }
+                }
+
+            }
 
             if (loading) {
                 gridItems(data = items, columnCount = 2, modifier = Modifier

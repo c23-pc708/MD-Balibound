@@ -19,4 +19,9 @@ interface ApiAuthInterface {
     suspend fun register(
         @Body registerRequest: RegisterRequest
     ): RegisterResponse
+
+    @GET("auth/user")
+    suspend fun getUser(
+        @Header("Authorization") token: String
+    ): LoginResponse
 }
