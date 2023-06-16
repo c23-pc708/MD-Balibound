@@ -189,7 +189,7 @@ fun HomeScreen(
                 }
             }
 
-            if (ratingsData.any { it != 0 }) {
+            if (ratingsData.any { it != 0 } && search.isEmpty() && category.all { !it.isActive } && !loading) {
                 item {
                     Column(
                         modifier = Modifier
@@ -199,7 +199,7 @@ fun HomeScreen(
                         Text(
                             text = "Recommended for you",
                             fontFamily = FontFamily,
-                            fontSize = 16.sp,
+                            fontSize = 18.sp,
                             fontWeight = FontWeight.SemiBold,
                             color = Color("#1E2432".toColorInt())
                         )

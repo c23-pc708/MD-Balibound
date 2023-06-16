@@ -303,8 +303,9 @@ fun DestinationScreen(
                                         )
                                     }
                                 )
-                            }
 
+                                Spacer(modifier = Modifier.height(50.dp))
+                            }
                         }
                     }
                 }
