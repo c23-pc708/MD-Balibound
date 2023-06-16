@@ -8,9 +8,10 @@ Balibound is an Android application designed to provide travel recommendations f
 4. User Reviews and Ratings: Users can share their experiences and contribute their own ratings for the places they have visited in Bali.
 
 ## Technology
-Android Studio: The Balibound app is built using Android Studio, the official integrated development environment for Android app development.
-Java: The app is primarily coded in Java, a widely used programming language for Android development.
-Google Maps API: Balibound integrates the Google Maps API to provide interactive map functionality and location-based services.
+1. Kotlin: Balibound is developed using Kotlin, a modern and expressive programming language for Android app development.
+2. Dagger Hilt: The app utilizes Dagger Hilt, a dependency injection library for Android, to manage and provide dependencies throughout the application.
+3. Retrofit Kotlin: Balibound integrates Retrofit Kotlin, a type-safe HTTP client for Android, to handle API integration and communicate with the backend server.
+4. Jetpack Compose: The app leverages Jetpack Compose, a modern toolkit for building native Android UIs, to create a visually appealing and responsive user interface.
 
 To install and run Balibound on your Android device or emulator, follow the steps below:
 
